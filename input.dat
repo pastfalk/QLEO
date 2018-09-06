@@ -1,0 +1,48 @@
+&wavenumber
+kstart		= 1.00
+kend 	       	= 0.01
+nk 	       	= 50
+/
+
+&initial_guess
+omega_r		= 1.65
+omega_i        	=-0.06
+increment_r	= 0.0000002
+increment_i    	= 0.0000002
+/
+
+&setup
+Nspecies	= 2
+theta		= 0.0
+delta		= 0.00001
+Bstart		= 1.0d-6
+dt		= 0.2
+tmax		= 200.0
+sgn		=-1
+restart		= 0
+/
+
+&accuracy
+rf_error	= 1.0d-3
+eps_error	= 1.0d-6
+/
+
+&species
+mode_in		= 1
+q_in		= 1.0
+mu_in		= 1.0
+dens_in		= 1.0
+drift_in	= 0.0
+beta_para_in	= 1.0
+beta_perp_in	= 1.0
+/
+
+&species
+mode_in		= 0
+q_in		=-1.0
+mu_in		= 1836.0
+dens_in		= 1.0
+drift_in	= 0.0
+beta_para_in	= 1.0
+beta_perp_in	= 1.0
+/
