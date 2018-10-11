@@ -16,10 +16,10 @@ Nspecies	= 2
 theta		= 0.0
 delta		= 0.00001
 Bstart		= 1.0d-6
-dt		= 0.001
+dt		= 0.2
 tmax		= 200.0
 sgn		=-1
-restart		= 9920
+restart		= 0
 /
 
 &accuracy
