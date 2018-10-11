@@ -20,6 +20,8 @@ subroutine read_data(omega_start,increment,kstart,kend,Bstart,tmax,dt,sgn,restar
   complex :: omega_start, increment
   real :: omega_r, omega_i, increment_r, increment_i
   integer :: sgn
+  integer :: sym_in, iarb
+  integer, allocatable, dimension(:) :: sym_dummy
 
   !define namelists and read input data using namelists
 
@@ -37,7 +39,7 @@ subroutine read_data(omega_start,increment,kstart,kend,Bstart,tmax,dt,sgn,restar
 
   namelist /species/ &
        & mode_in, q_in, mu_in, dens_in,drift_in,&
-       & beta_para_in, beta_perp_in
+       & sym_in, beta_para_in, beta_perp_in
 
   open(unit=17,status='old',file='input.dat')
   read(17,wavenumber)
@@ -49,6 +51,10 @@ subroutine read_data(omega_start,increment,kstart,kend,Bstart,tmax,dt,sgn,restar
   allocate(mu(Nspecies),q(Nspecies),dens(Nspecies))
   allocate(beta_para(Nspecies),beta_perp(Nspecies),beta_ratio(Nspecies))
 
+  allocate(sym_dummy(Nspecies))
+
+  iarb=0
+
   do n=1,Nspecies
      read(17,species)
      mode(n)=mode_in
@@ -56,6 +62,7 @@ subroutine read_data(omega_start,increment,kstart,kend,Bstart,tmax,dt,sgn,restar
      mu(n)=mu_in
      dens(n)=dens_in
      drift(n)=drift_in
+     sym_dummy(n)=sym_in
      beta_para(n)=beta_para_in
      beta_perp(n)=beta_perp_in
 
@@ -64,6 +71,38 @@ subroutine read_data(omega_start,increment,kstart,kend,Bstart,tmax,dt,sgn,restar
      endif
 
   enddo
+
+
+  !count number of included species with arbitrary velocity distribution
+
+  iarb=0
+  do n=1,Nspecies
+     if(mode(n).eq.1) then
+        iarb=iarb+1
+     endif
+  enddo
+
+  narb=iarb
+
+  allocate(sym(narb))
+
+  iarb=0
+  do n=1,Nspecies
+     if(mode(n).eq.1) then
+        iarb=iarb+1
+        if(sym_dummy(n).eq.0) then
+           sym(iarb)=.false.
+        else if(sym_dummy(n).eq.1) then
+           sym(iarb)=.true.
+        else
+           write(*,*) 'Choose 0 or 1 for parameter sym!'
+           stop
+        endif
+
+     endif
+  enddo
+
+  deallocate(sym_dummy)
 
   close(17)
 

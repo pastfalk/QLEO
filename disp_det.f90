@@ -12,7 +12,7 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
   complex :: del_xx, del_yy, del_zz
   complex :: del_xy, del_xz, del_yz
   logical, dimension(6) :: esc
-  real, dimension(npara(1)-1,nperp(1)-1,4,3,narb) :: splcoeff1, splcoeff2
+  real, dimension(npara_max-1,nperp_max-1,4,3,narb) :: splcoeff1, splcoeff2
   complex :: omega
   real :: k
   complex :: disp_det
@@ -287,54 +287,54 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
 
               epsilon_xx=epsilon_xx+ &
                    & 2*pi *mu(m)**3 *q(m)**4 *&
-                   & dens(m) * omega/(k*sin(theta))**2 *n*n*&
-                   & (  intgrl(1,1,1,1)-&
-                   &    (k*cos(theta))/omega*intgrl(1,2,1,1)+&
-                   &    (k*cos(theta))/omega*intgrl(1,1,2,2))
+                   & dens(m) * 1.0/(k*sin(theta))**2 *n*n*&
+                   & (  omega*intgrl(1,1,1,1)-&
+                   &    (k*cos(theta))*intgrl(1,2,1,1)+&
+                   &    (k*cos(theta))*intgrl(1,1,2,2))
 
               epsilon_yy=epsilon_yy+ &
-                   & 2*pi *mu(m)*q(m)**2 *dens(m) * omega *&
-                   & (  intgrl(2,1,1,1)-&
-                   & (k*cos(theta))/omega*intgrl(2,2,1,1)+&
-                   & (k*cos(theta))/omega*intgrl(2,1,2,2))
+                   & 2*pi *mu(m)*q(m)**2 *dens(m) *&
+                   & (  omega*intgrl(2,1,1,1)-&
+                   & (k*cos(theta))*intgrl(2,2,1,1)+&
+                   & (k*cos(theta))*intgrl(2,1,2,2))
 
               epsilon_zz=epsilon_zz+ &
-                   & 2*pi *mu(m) *q(m)**2 * dens(m)* omega *&
-                   & (  (1-n*mu(m)*q(m)/omega)*intgrl(1,2,2,2)+&
-                   & n*mu(m)*q(m)/omega*intgrl(1,3,1,1))
+                   & 2*pi *mu(m) *q(m)**2 * dens(m)*&
+                   & (  (omega-n*mu(m)*q(m))*intgrl(1,2,2,2)+&
+                   & n*mu(m)*q(m)*intgrl(1,3,1,1))
 
               epsilon_xy=epsilon_xy+&
                    & 2 *pi*i * mu(m)**2 * q(m)**3 *&
-                   & dens(m)*n *omega/(k*sin(theta))*&
-                   & ( intgrl(3,1,1,1)-&
-                   &    (k*cos(theta))/omega*intgrl(3,2,1,1)+&
-                   &    (k*cos(theta))/omega*intgrl(3,1,2,2))
+                   & dens(m)*n *1.0/(k*sin(theta))*&
+                   & ( omega*intgrl(3,1,1,1)-&
+                   &    (k*cos(theta))*intgrl(3,2,1,1)+&
+                   &    (k*cos(theta))*intgrl(3,1,2,2))
 
               epsilon_xz=epsilon_xz+&
                    & 2*pi * mu(m)**2 * q(m)**3 *&
-                   & dens(m) *n* omega/(k*sin(theta))*&
-                   & (  (1-n*mu(m)*q(m)/omega)*intgrl(1,1,2,2)+&
-                   & n*mu(m)*q(m)/omega*intgrl(1,2,1,1))
+                   & dens(m) *n* 1.0/(k*sin(theta))*&
+                   & (  (omega-n*mu(m)*q(m))*intgrl(1,1,2,2)+&
+                   & n*mu(m)*q(m)*intgrl(1,2,1,1))
 
               epsilon_yz=epsilon_yz+&
-                   & (-2)*pi*i *mu(m)*q(m)**2 * dens(m)*omega*&
-                   & (  (1-n*mu(m)*q(m)/omega)*intgrl(3,1,2,2)+&
-                   & n*mu(m)*q(m)/omega*intgrl(3,2,1,1))
+                   & (-2)*pi*i *mu(m)*q(m)**2 * dens(m)*&
+                   & (  (omega-n*mu(m)*q(m))*intgrl(3,1,2,2)+&
+                   & n*mu(m)*q(m)*intgrl(3,2,1,1))
 
            else
 
               if(esc(1)) then
                  del_xx=2*pi *mu(m)**3 *q(m)**4 *&
-                      & dens(m) * omega/(k*sin(theta))**2 *n*n*&
-                      & (  intgrl(1,1,1,1)-&
-                      &    (k*cos(theta))/omega*intgrl(1,2,1,1)+&
-                      &    (k*cos(theta))/omega*intgrl(1,1,2,2))+&
+                      & dens(m) * 1.0/(k*sin(theta))**2 *n*n*&
+                      & (  omega*intgrl(1,1,1,1)-&
+                      &    (k*cos(theta))*intgrl(1,2,1,1)+&
+                      &    (k*cos(theta))*intgrl(1,1,2,2))+&
                       
                       & 2*pi *mu(m)**3 *q(m)**4 *&
-                      & dens(m) * omega/(k*sin(theta))**2 *n*n*&
-                      & (  intgrl2(1,1,1,1)-&
-                      &    (k*cos(theta))/omega*intgrl2(1,2,1,1)+&
-                      &    (k*cos(theta))/omega*intgrl2(1,1,2,2))
+                      & dens(m) * 1.0/(k*sin(theta))**2 *n*n*&
+                      & (  omega*intgrl2(1,1,1,1)-&
+                      &    (k*cos(theta))*intgrl2(1,2,1,1)+&
+                      &    (k*cos(theta))*intgrl2(1,1,2,2))
 
                  if((n.le.4).or.((n.gt.4).and.((abs(real(del_xx)/ real(epsilon_xx)).gt.eps_error).or. &
                       & (abs(aimag(del_xx)/aimag(epsilon_xx)).gt.eps_error)))) then
@@ -347,15 +347,15 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
               endif
 
               if(esc(2)) then
-                 del_yy=2*pi *mu(m)*q(m)**2 *dens(m) * omega *&
-                      & (  intgrl(2,1,1,1)-&
-                      & (k*cos(theta))/omega*intgrl(2,2,1,1)+&
-                      & (k*cos(theta))/omega*intgrl(2,1,2,2))+&
+                 del_yy=2*pi *mu(m)*q(m)**2 *dens(m) * &
+                      & (  omega*intgrl(2,1,1,1)-&
+                      & (k*cos(theta))*intgrl(2,2,1,1)+&
+                      & (k*cos(theta))*intgrl(2,1,2,2))+&
                       
-                      & 2*pi *mu(m)*q(m)**2 *dens(m) * omega *&
-                      & (  intgrl2(2,1,1,1)-&
-                      & (k*cos(theta))/omega*intgrl2(2,2,1,1)+&
-                      & (k*cos(theta))/omega*intgrl2(2,1,2,2))
+                      & 2*pi *mu(m)*q(m)**2 *dens(m) *&
+                      & (  omega*intgrl2(2,1,1,1)-&
+                      & (k*cos(theta))*intgrl2(2,2,1,1)+&
+                      & (k*cos(theta))*intgrl2(2,1,2,2))
 
 
                  if((n.le.4).or.((n.gt.4).and.((abs(real(del_yy)/ real(epsilon_yy)).gt.eps_error).or. &
@@ -367,13 +367,13 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
               endif
 
               if(esc(3)) then
-                 del_zz=2*pi *mu(m) *q(m)**2 * dens(m)* omega *&
-                      & (  (1-n*mu(m)*q(m)/omega)*intgrl(1,2,2,2)+&
-                      & n*mu(m)*q(m)/omega*intgrl(1,3,1,1))+&
+                 del_zz=2*pi *mu(m) *q(m)**2 * dens(m)* &
+                      & (  (omega-n*mu(m)*q(m))*intgrl(1,2,2,2)+&
+                      & n*mu(m)*q(m)*intgrl(1,3,1,1))+&
                       
-                      & 2*pi *mu(m) *q(m)**2 * dens(m)* omega *&
-                      & (  (1+n*mu(m)*q(m)/omega)*intgrl2(1,2,2,2)-&
-                      & n*mu(m)*q(m)/omega*intgrl2(1,3,1,1))
+                      & 2*pi *mu(m) *q(m)**2 * dens(m) *&
+                      & (  (omega+n*mu(m)*q(m))*intgrl2(1,2,2,2)-&
+                      & n*mu(m)*q(m)*intgrl2(1,3,1,1))
 
 
                  if((n.le.4).or.((n.gt.4).and.((abs(real(del_zz)/ real(epsilon_zz)).gt.eps_error).or. &
@@ -386,16 +386,16 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
 
               if(esc(4)) then
                  del_xy=2 *pi*i * mu(m)**2 * q(m)**3 *&
-                      & dens(m)*n *omega/(k*sin(theta))*&
-                      & ( intgrl(3,1,1,1)-&
-                      &    (k*cos(theta))/omega*intgrl(3,2,1,1)+&
-                      &    (k*cos(theta))/omega*intgrl(3,1,2,2))+& 
+                      & dens(m)*n *1.0/(k*sin(theta))*&
+                      & ( omega*intgrl(3,1,1,1)-&
+                      &    (k*cos(theta))*intgrl(3,2,1,1)+&
+                      &    (k*cos(theta))*intgrl(3,1,2,2))+& 
                       
                       & (-2) *pi*i * mu(m)**2 * q(m)**3 *&
-                      & dens(m)*n *omega/(k*sin(theta))*&
-                      & ( intgrl2(3,1,1,1)-&
-                      &    (k*cos(theta))/omega*intgrl2(3,2,1,1)+&
-                      &    (k*cos(theta))/omega*intgrl2(3,1,2,2)) 
+                      & dens(m)*n *1.0/(k*sin(theta))*&
+                      & ( omega*intgrl2(3,1,1,1)-&
+                      &    (k*cos(theta))*intgrl2(3,2,1,1)+&
+                      &    (k*cos(theta))*intgrl2(3,1,2,2)) 
 
                  if((n.le.4).or.((n.gt.4).and.((abs( real(del_xy)/ real(epsilon_xy)).gt.eps_error).or. &
                       & (abs(aimag(del_xy)/aimag(epsilon_xy)).gt.eps_error)))) then
@@ -407,14 +407,14 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
 
               if(esc(5)) then
                  del_xz=2*pi * mu(m)**2 * q(m)**3 *&
-                      & dens(m) *n* omega/(k*sin(theta))*&
-                      & (  (1-n*mu(m)*q(m)/omega)*intgrl(1,1,2,2)+&
-                      & n*mu(m)*q(m)/omega*intgrl(1,2,1,1))+&
+                      & dens(m) *n* 1.0/(k*sin(theta))*&
+                      & (  (omega-n*mu(m)*q(m))*intgrl(1,1,2,2)+&
+                      & n*mu(m)*q(m)*intgrl(1,2,1,1))+&
                       
                       & (-2)*pi * mu(m)**2 * q(m)**3 *&
-                      & dens(m) *n* omega/(k*sin(theta))*&
-                      & (  (1+n*mu(m)*q(m)/omega)*intgrl2(1,1,2,2)-&
-                      & n*mu(m)*q(m)/omega*intgrl2(1,2,1,1))
+                      & dens(m) *n* 1.0/(k*sin(theta))*&
+                      & (  (omega+n*mu(m)*q(m))*intgrl2(1,1,2,2)-&
+                      & n*mu(m)*q(m)*intgrl2(1,2,1,1))
 
                  if((n.le.4).or.((n.gt.4).and.((abs(real(del_xz)/ real(epsilon_xz)).gt.eps_error).or. &
                       & (abs(aimag(del_xz)/aimag(epsilon_xz)).gt.eps_error)))) then
@@ -425,13 +425,13 @@ function disp_det(omega,k,splcoeff1,splcoeff2)
               endif
 
               if(esc(6)) then
-                 del_yz=(-2)*pi*i *mu(m)*q(m)**2 * dens(m)*omega*&
-                      & (  (1-n*mu(m)*q(m)/omega)*intgrl(3,1,2,2)+&
-                      & n*mu(m)*q(m)/omega*intgrl(3,2,1,1))+&
+                 del_yz=(-2)*pi*i *mu(m)*q(m)**2 * dens(m)*&
+                      & (  (omega-n*mu(m)*q(m))*intgrl(3,1,2,2)+&
+                      & n*mu(m)*q(m)*intgrl(3,2,1,1))+&
                       
-                      & (-2)*pi*i *mu(m)*q(m)**2 * dens(m)*omega*&
-                      & (  (1+n*mu(m)*q(m)/omega)*intgrl2(3,1,2,2)-&
-                      & n*mu(m)*q(m)/omega*intgrl2(3,2,1,1))
+                      & (-2)*pi*i *mu(m)*q(m)**2 * dens(m)*&
+                      & (  (omega+n*mu(m)*q(m))*intgrl2(3,1,2,2)-&
+                      & n*mu(m)*q(m)*intgrl2(3,2,1,1))
 
                  if((n.le.4).or.((n.gt.4).and.((abs(real(del_yz)/ real(epsilon_yz)).gt.eps_error).or. &
                       & (abs(aimag(del_yz)/aimag(epsilon_yz)).gt.eps_error)))) then

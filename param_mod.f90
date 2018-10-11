@@ -30,7 +30,9 @@ integer :: narb
 integer, allocatable, dimension (:) :: mode
 integer, allocatable, dimension (:) :: npara
 integer, allocatable, dimension (:) :: nperp
+integer :: npara_max, nperp_max
 integer, allocatable, dimension (:) :: nhalf
+logical, allocatable, dimension (:) :: sym
 
 
 end module param_mod

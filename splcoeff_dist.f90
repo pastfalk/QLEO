@@ -8,12 +8,12 @@ subroutine splcoeff_dist(iarb,splcoeff1c,splcoeff2c)
   implicit none
   integer :: iarb
   integer :: ipara,iperp
-  real, dimension (npara(iarb),nperp(iarb),0:3) :: splcoeff1a
-  real, dimension (npara(iarb),nperp(iarb),0:3,3) :: splcoeff1b
-  real, dimension (npara(iarb),nperp(iarb),0:3) :: splcoeff2a
-  real, dimension (npara(iarb),nperp(iarb),0:3,3) :: splcoeff2b
-  real, dimension (npara(iarb)-1,nperp(iarb)-1,4,3) :: splcoeff1c
-  real, dimension (npara(iarb)-1,nperp(iarb)-1,4,3) :: splcoeff2c
+  real, dimension (npara_max,nperp_max,0:3) :: splcoeff1a
+  real, dimension (npara_max,nperp_max,0:3,3) :: splcoeff1b
+  real, dimension (npara_max,nperp_max,0:3) :: splcoeff2a
+  real, dimension (npara_max,nperp_max,0:3,3) :: splcoeff2b
+  real, dimension (npara_max-1,nperp_max-1,4,3) :: splcoeff1c
+  real, dimension (npara_max-1,nperp_max-1,4,3) :: splcoeff2c
 
   !Interpolate distribution over perpendicular velocity while scanning through the parallel velocity grid
 

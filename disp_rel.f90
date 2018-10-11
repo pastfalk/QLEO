@@ -17,8 +17,8 @@ subroutine disp_rel(krange,omega_start,increment,om,ga)
 
   !spline-interpolate the velocity distributions
 
-  allocate(splcoeff1(npara(1)-1,nperp(1)-1,4,3,narb))
-  allocate(splcoeff2(npara(1)-1,nperp(1)-1,4,3,narb))
+  allocate(splcoeff1(npara_max-1,nperp_max-1,4,3,narb))
+  allocate(splcoeff2(npara_max-1,nperp_max-1,4,3,narb))
 
   do iarb=1,narb
      call splcoeff_dist(iarb,splcoeff1(:,:,:,:,iarb),splcoeff2(:,:,:,:,iarb))

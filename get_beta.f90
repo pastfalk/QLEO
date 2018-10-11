@@ -19,14 +19,14 @@ subroutine get_beta(bpara,bperp)
 
      bpara(iarb)=0.0
 
-     do iperp=1,nperp(1)-1
+     do iperp=1,nperp(iarb)-1
 
         h1=0.0
         h2=0.0
         h3=0.0
         h4=0.0
 
-        do ipara=1,npara(1)-1
+        do ipara=1,npara(iarb)-1
 
            h1=h1+splcoeff(ipara,iperp,1,1)*1.0/6.0*(vpara(ipara+1,iarb)**6 - vpara(ipara,iarb)**6)
            h1=h1+splcoeff(ipara,iperp,2,1)*1.0/5.0*(vpara(ipara+1,iarb)**5 - vpara(ipara,iarb)**5)
@@ -64,14 +64,14 @@ subroutine get_beta(bpara,bperp)
 
      bperp(iarb)=0.0
 
-     do iperp=1,nperp(1)-1
+     do iperp=1,nperp(iarb)-1
 
         h1=0.0
         h2=0.0
         h3=0.0
         h4=0.0
 
-        do ipara=1,npara(1)-1
+        do ipara=1,npara(iarb)-1
 
            h1=h1+splcoeff(ipara,iperp,1,1)*1.0/4.0*(vpara(ipara+1,iarb)**4 - vpara(ipara,iarb)**4)
            h1=h1+splcoeff(ipara,iperp,2,1)*1.0/3.0*(vpara(ipara+1,iarb)**3 - vpara(ipara,iarb)**3)

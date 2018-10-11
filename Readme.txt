@@ -120,6 +120,8 @@ dens_in	     - Density of the particles in units of the density of the first par
 
 drift_in     - This introduces a drift velocity to the bi-Maxwellian distribution (mode '0' only). The drift is normalized with respect to the Alfvén velocity.
 
+sym_in       - Choose '1' if provided velocity distribution function (mode '1' only) is symetric with respect to the parallel velocity, choose '0' if it is asymmetric. Please note that sym_in = 0 has not been tested thoroughly yet. 
+
 beta_para_in - Beta parameter parallel to the background magnetic field (mode '0' only).
 
 beta_perp_in - Beta parameter perpendicular to the background magnetic field (mode '0' only).

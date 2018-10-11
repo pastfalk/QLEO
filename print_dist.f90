@@ -20,9 +20,9 @@ subroutine print_dist(tstep,iarb)
 
   open(unit=72,status='unknown',file=filename)
 
-  do ipara=1,npara(1)
-     do iperp=1,nperp(1)     
-        write(72,'(F12.8,F12.8,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb), distribution(ipara,iperp,iarb) 
+  do ipara=1,npara(iarb)
+     do iperp=1,nperp(iarb)     
+        write(72,'(F12.6,F12.6,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb), distribution(ipara,iperp,iarb) 
      enddo
   enddo
 
@@ -32,11 +32,11 @@ subroutine print_dist(tstep,iarb)
 
   open(unit=72,status='unknown',file=filename)
 
-  do ipara=nhalf(1),npara(1)
-     do iperp=1,nperp(1)     
-        write(72,'(F12.8,F12.8,E20.10,E20.10,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb),&
-             & delfdelpa(ipara-nhalf(1)+1,iperp,iarb), delfdelpapa(ipara-nhalf(1)+1,iperp,iarb),&
-             & delfdelpape(ipara-nhalf(1)+1,iperp,iarb)  
+  do ipara=nhalf(iarb),npara(iarb)
+     do iperp=1,nperp(iarb)
+        write(72,'(F12.6,F12.6,E20.10,E20.10,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb),&
+             & delfdelpa(ipara-nhalf(iarb)+1,iperp,iarb), delfdelpapa(ipara-nhalf(iarb)+1,iperp,iarb),&
+             & delfdelpape(ipara-nhalf(iarb)+1,iperp,iarb)
      enddo
   enddo
 
@@ -46,10 +46,10 @@ subroutine print_dist(tstep,iarb)
 
   open(unit=72,status='unknown',file=filename)
 
-  do ipara=nhalf(1),npara(1)
-     do iperp=1,nperp(1)     
-        write(72,'(F12.8,F12.8,E20.10,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb),&
-             & delfdelpe(ipara-nhalf(1)+1,iperp,iarb), delfdelpepe(ipara-nhalf(1)+1,iperp,iarb)  
+  do ipara=nhalf(iarb),npara(iarb)
+     do iperp=1,nperp(iarb)
+        write(72,'(F12.6,F12.6,E20.10,E20.10)') vpara(ipara,iarb), vperp(iperp,iarb),&
+             & delfdelpe(ipara-nhalf(iarb)+1,iperp,iarb), delfdelpepe(ipara-nhalf(iarb)+1,iperp,iarb)  
      enddo
   enddo
 

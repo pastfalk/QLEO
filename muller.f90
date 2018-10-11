@@ -17,7 +17,7 @@ subroutine muller(omega_start,k,sol,splcoeff1,splcoeff2)
   complex :: a, b, c, d1, d2
   integer :: n, j
   real :: om, ga, om_old, ga_old
-  real, dimension(npara(1)-1,nperp(1)-1,4,3,narb) :: splcoeff1, splcoeff2
+  real, dimension(npara_max-1,nperp_max-1,4,3,narb) :: splcoeff1, splcoeff2
 
   external disp_det
 

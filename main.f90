@@ -42,11 +42,12 @@ program main
 
   allocate(krange_adapt(nk),omega_adapt(nk),gamma_adapt(nk),Bksq_adapt(nk))
   allocate(krange_full(nk),omega_full(nk),gamma_full(nk),Bksq_full(nk))
-  allocate(delfdelpa(nhalf(1),nperp(1),narb),delfdelpe(nhalf(1),nperp(1),narb),delfdelpape(nhalf(1),nperp(1),narb))
-  allocate(delfdelpepe(nhalf(1),nperp(1),narb),delfdelpapa(nhalf(1),nperp(1),narb))
-  allocate(f1(nhalf(1),nperp(1),narb))
-  allocate(old_dist(npara(1),nperp(1),narb))
-  allocate(contr1(nhalf(1),4),contr2(nhalf(1),2))
+  allocate(delfdelpa(npara_max,nperp_max,narb),delfdelpe(npara_max,nperp_max,narb))
+  allocate(delfdelpape(npara_max,nperp_max,narb))
+  allocate(delfdelpepe(npara_max,nperp_max,narb),delfdelpapa(npara_max,nperp_max,narb))
+  allocate(f1(npara_max,nperp_max,narb))
+  allocate(old_dist(npara_max,nperp_max,narb))
+  allocate(contr1(npara_max,4),contr2(npara_max,2))
   allocate(c_om(nk-1,0:3), c_ga(nk-1,0:3),c_Bk(nk-1,0:3))
   allocate(bpara(narb),bperp(narb))
 
@@ -55,7 +56,7 @@ program main
   !loop over time
 
   do while(.true.)
-     
+
      start=omp_get_wtime()
 
      do iarb=1,narb
@@ -65,7 +66,7 @@ program main
         !print out current velocity distribution (needed for restart of simulation)
 
         if((modulo(tstep,print_interval).eq.0.0).and.(tstep.ne.restart)) then
-          call print_dist(tstep,iarb)
+           call print_dist(tstep,iarb)
         endif
 
      enddo
@@ -123,46 +124,47 @@ program main
 
         !$omp parallel do private(ipara,dummy1,dummy2)
 
-        do ipara=nhalf(1),npara(1)
+        do ipara=nhalf(iarb),npara(iarb)
 
            call get_deltaf(krange_adapt,c_om,c_ga,c_Bk,vpara(ipara,iarb),sgn,dummy1,dummy2)
 
-           contr1(ipara-nhalf(1)+1,:)=dummy1*dt
-           contr2(ipara-nhalf(1)+1,:)=dummy2*dt
+           contr1(ipara-nhalf(iarb)+1,:)=dummy1*dt
+           contr2(ipara-nhalf(iarb)+1,:)=dummy2*dt
 
         enddo
 
         !$omp end parallel do
 
 
+
         !iperp=1
 
-        do ipara=nhalf(1),npara(1)
+        do ipara=nhalf(iarb),npara(iarb)
 
-           C01=   contr1(ipara-nhalf(1)+1,1) -&
-                & contr1(ipara-nhalf(1)+1,2)*vpara(ipara,iarb)-&
-                & contr1(ipara-nhalf(1)+1,3)*vpara(ipara,iarb)+&
-                & contr1(ipara-nhalf(1)+1,4)*(vpara(ipara,iarb)**2)
+           C01=   contr1(ipara-nhalf(iarb)+1,1) -&
+                & contr1(ipara-nhalf(iarb)+1,2)*vpara(ipara,iarb)-&
+                & contr1(ipara-nhalf(iarb)+1,3)*vpara(ipara,iarb)+&
+                & contr1(ipara-nhalf(iarb)+1,4)*(vpara(ipara,iarb)**2)
 
-           C10=   2*contr1(ipara-nhalf(1)+1,2)-&
-                & 2*contr1(ipara-nhalf(1)+1,4)*vpara(ipara,iarb)
+           C10=   2*contr1(ipara-nhalf(iarb)+1,2)-&
+                & 2*contr1(ipara-nhalf(iarb)+1,4)*vpara(ipara,iarb)
 
-           C02=   contr1(ipara-nhalf(1)+1,1) -&
-                & contr1(ipara-nhalf(1)+1,2)*vpara(ipara,iarb) -&
-                & contr1(ipara-nhalf(1)+1,3)*vpara(ipara,iarb) +&
-                & contr1(ipara-nhalf(1)+1,4)*vpara(ipara,iarb)**2
+           C02=   contr1(ipara-nhalf(iarb)+1,1) -&
+                & contr1(ipara-nhalf(iarb)+1,2)*vpara(ipara,iarb) -&
+                & contr1(ipara-nhalf(iarb)+1,3)*vpara(ipara,iarb) +&
+                & contr1(ipara-nhalf(iarb)+1,4)*vpara(ipara,iarb)**2
 
            C20= 0.0
 
            C11= 0.0
 
-           delta_f=C01*delfdelpe(ipara-nhalf(1)+1,1,iarb)+&
-                &  C10*delfdelpa(ipara-nhalf(1)+1,1,iarb)+&
-                &  C02*delfdelpepe(ipara-nhalf(1)+1,1,iarb)+&
-                &  C20*delfdelpapa(ipara-nhalf(1)+1,1,iarb)+&
-                &  C11*delfdelpape(ipara-nhalf(1)+1,1,iarb)
+           delta_f=C01*delfdelpe(ipara-nhalf(iarb)+1,1,iarb)+&
+                &  C10*delfdelpa(ipara-nhalf(iarb)+1,1,iarb)+&
+                &  C02*delfdelpepe(ipara-nhalf(iarb)+1,1,iarb)+&
+                &  C20*delfdelpapa(ipara-nhalf(iarb)+1,1,iarb)+&
+                &  C11*delfdelpape(ipara-nhalf(iarb)+1,1,iarb)
 
-           f1(ipara-nhalf(1)+1,1,iarb)=delta_f
+           f1(ipara-nhalf(iarb)+1,1,iarb)=delta_f
 
         enddo
 
@@ -170,45 +172,48 @@ program main
 
         !$omp parallel do private(ipara,iperp,delta_f,C01,C10,C02,C20,C11)
 
-        do ipara=nhalf(1),npara(1)
+        do ipara=nhalf(iarb),npara(iarb)
 
-           do iperp=2,nperp(1)
+           do iperp=2,nperp(iarb)
 
-              C01=(  contr1(ipara-nhalf(1)+1,1) -&
-                   & contr1(ipara-nhalf(1)+1,2)*vpara(ipara,iarb)-&
-                   & contr1(ipara-nhalf(1)+1,3)*vpara(ipara,iarb)+&
-                   & contr1(ipara-nhalf(1)+1,4)*(vpara(ipara,iarb)**2 - vperp(iperp,iarb)**2))/&
+              C01=(  contr1(ipara-nhalf(iarb)+1,1) -&
+                   & contr1(ipara-nhalf(iarb)+1,2)*vpara(ipara,iarb)-&
+                   & contr1(ipara-nhalf(iarb)+1,3)*vpara(ipara,iarb)+&
+                   & contr1(ipara-nhalf(iarb)+1,4)*(vpara(ipara,iarb)**2 - vperp(iperp,iarb)**2))/&
                    & vperp(iperp,iarb)+&
-                   & contr2(ipara-nhalf(1)+1,1)*vperp(iperp,iarb)-&
-                   & contr2(ipara-nhalf(1)+1,2)*vperp(iperp,iarb)*vpara(ipara,iarb)
+                   & contr2(ipara-nhalf(iarb)+1,1)*vperp(iperp,iarb)-&
+                   & contr2(ipara-nhalf(iarb)+1,2)*vperp(iperp,iarb)*vpara(ipara,iarb)
 
-              C10=   2*contr1(ipara-nhalf(1)+1,2)-&
-                   & 2*contr1(ipara-nhalf(1)+1,4)*vpara(ipara,iarb)+&
-                   & contr2(ipara-nhalf(1)+1,2)*vperp(iperp,iarb)**2
+              C10=   2*contr1(ipara-nhalf(iarb)+1,2)-&
+                   & 2*contr1(ipara-nhalf(iarb)+1,4)*vpara(ipara,iarb)+&
+                   & contr2(ipara-nhalf(iarb)+1,2)*vperp(iperp,iarb)**2
 
-              C02=   contr1(ipara-nhalf(1)+1,1) -&
-                   & contr1(ipara-nhalf(1)+1,2)*vpara(ipara,iarb) -&
-                   & contr1(ipara-nhalf(1)+1,3)*vpara(ipara,iarb) +&
-                   & contr1(ipara-nhalf(1)+1,4)*vpara(ipara,iarb)**2
+              C02=   contr1(ipara-nhalf(iarb)+1,1) -&
+                   & contr1(ipara-nhalf(iarb)+1,2)*vpara(ipara,iarb) -&
+                   & contr1(ipara-nhalf(iarb)+1,3)*vpara(ipara,iarb) +&
+                   & contr1(ipara-nhalf(iarb)+1,4)*vpara(ipara,iarb)**2
 
-              C20=   contr1(ipara-nhalf(1)+1,4)*vperp(iperp,iarb)**2
+              C20=   contr1(ipara-nhalf(iarb)+1,4)*vperp(iperp,iarb)**2
 
-              C11=   contr1(ipara-nhalf(1)+1,2)*vperp(iperp,iarb)+&
-                   & contr1(ipara-nhalf(1)+1,3)*vperp(iperp,iarb)-&
-                   & 2*contr1(ipara-nhalf(1)+1,4)*vperp(iperp,iarb)*vpara(ipara,iarb)
+              C11=   contr1(ipara-nhalf(iarb)+1,2)*vperp(iperp,iarb)+&
+                   & contr1(ipara-nhalf(iarb)+1,3)*vperp(iperp,iarb)-&
+                   & 2*contr1(ipara-nhalf(iarb)+1,4)*vperp(iperp,iarb)*vpara(ipara,iarb)
 
-              delta_f=C01*delfdelpe(ipara-nhalf(1)+1,iperp,iarb)+&
-                   &  C10*delfdelpa(ipara-nhalf(1)+1,iperp,iarb)+&
-                   &  C02*delfdelpepe(ipara-nhalf(1)+1,iperp,iarb)+&
-                   &  C20*delfdelpapa(ipara-nhalf(1)+1,iperp,iarb)+&
-                   &  C11*delfdelpape(ipara-nhalf(1)+1,iperp,iarb)
+              delta_f=C01*delfdelpe(ipara-nhalf(iarb)+1,iperp,iarb)+&
+                   &  C10*delfdelpa(ipara-nhalf(iarb)+1,iperp,iarb)+&
+                   &  C02*delfdelpepe(ipara-nhalf(iarb)+1,iperp,iarb)+&
+                   &  C20*delfdelpapa(ipara-nhalf(iarb)+1,iperp,iarb)+&
+                   &  C11*delfdelpape(ipara-nhalf(iarb)+1,iperp,iarb)
 
-              f1(ipara-nhalf(1)+1,iperp,iarb)=delta_f
+              f1(ipara-nhalf(iarb)+1,iperp,iarb)=delta_f
 
            enddo
         enddo
 
         !$omp end parallel do
+
+
+
 
         if(modulo(tstep,print_interval).eq.0.0) then
            call print_df(tstep,f1(:,:,iarb),contr1,contr2,iarb)
@@ -221,15 +226,31 @@ program main
            Bksq_full(ik)=Bksq_full(ik)+2*gamma_full(ik)*Bksq_full(ik)*dt
         enddo
 
-        do ipara=nhalf(1),npara(1)
-           do iperp=1,nperp(1)
 
-              distribution(ipara,iperp,iarb)=old_dist(ipara,iperp,iarb)+f1(ipara-nhalf(1)+1,iperp,iarb)
-              distribution(npara(1)+1-ipara,iperp,iarb)=old_dist(npara(1)+1-ipara,iperp,iarb)+&
-                   & f1(ipara-nhalf(1)+1,iperp,iarb)
+        if(sym(iarb)) then
 
+           do ipara=nhalf(iarb),npara(iarb)
+              do iperp=1,nperp(iarb)
+
+                 distribution(ipara,iperp,iarb)=old_dist(ipara,iperp,iarb)+f1(ipara-nhalf(iarb)+1,iperp,iarb)
+                 distribution(npara(iarb)+1-ipara,iperp,iarb)=old_dist(npara(iarb)+1-ipara,iperp,iarb)+&
+                      & f1(ipara-nhalf(iarb)+1,iperp,iarb)
+
+              enddo
            enddo
-        enddo
+
+        else
+
+           do ipara=1,npara(iarb)
+              do iperp=1,nperp(iarb)
+
+                 distribution(ipara,iperp,iarb)=old_dist(ipara,iperp,iarb)+f1(ipara,iperp,iarb)
+
+              enddo
+           enddo
+
+        endif
+
 
      enddo
 
@@ -237,7 +258,7 @@ program main
      !compute beta parameters
 
      call get_beta(bpara,bperp)
-     
+
      if(narb.gt.1) then
         do iarb=1,narb
            write(*,*) iarb, '- beta para:', bpara(iarb)
@@ -328,6 +349,6 @@ program main
   deallocate(contr1,contr2)
   deallocate(c_om,c_ga,c_Bk)
   deallocate(bpara,bperp)
-  
+
 
 end program main

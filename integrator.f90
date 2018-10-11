@@ -20,8 +20,8 @@ subroutine integrator(omega,k,m,iarb,n,Ivpe,intgrl,splcoeff1,splcoeff2)
   integer :: ipara,iperp
   complex(kind=16) :: zeta
   real :: zeta_r
-  real, dimension (npara(iarb)-1,nperp(iarb)-1,4,3) :: splcoeff1
-  real, dimension (npara(iarb)-1,nperp(iarb)-1,4,3) :: splcoeff2
+  real, dimension (npara_max-1,nperp_max-1,4,3) :: splcoeff1
+  real, dimension (npara_max-1,nperp_max-1,4,3) :: splcoeff2
   complex, dimension(3) :: sum0
   real, dimension(3) :: sum1, sum2, sum3
   real, dimension (3,5,nperp(iarb)) :: Ivpe

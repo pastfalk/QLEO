@@ -12,14 +12,8 @@ subroutine read_dist(restart)
   integer :: restart
   character(len=1024), allocatable, dimension (:) :: filename
 
-  !count number of included species with arbitrary velocity distribution
-
-  narb=0
-  do n=1,Nspecies
-     if(mode(n).eq.1) then
-        narb=narb+1
-     endif
-  enddo
+  npara_max=0
+  nperp_max=0
 
   if(narb.ne.0) then
 
@@ -74,6 +68,13 @@ subroutine read_dist(restart)
            nperp(iarb)=nperp(iarb)+1
 
         enddo
+
+
+        if(npara(iarb).gt.npara_max) then
+           npara_max=npara(iarb)
+           nperp_max=nperp(iarb)
+        endif
+
         close(17)
 
         write(*,*) iarb, npara(iarb),nperp(iarb)
@@ -82,9 +83,9 @@ subroutine read_dist(restart)
 
      !read distribution data from the files
 
-     allocate(distribution(npara(1),nperp(1),narb))
-     allocate(vpara(npara(1),narb))
-     allocate(vperp(nperp(1),narb))
+     allocate(distribution(npara_max,nperp_max,narb))
+     allocate(vpara(npara_max,narb))
+     allocate(vperp(nperp_max,narb))
      
      do iarb=1,narb
 
@@ -113,7 +114,11 @@ subroutine read_dist(restart)
   allocate(nhalf(narb))
 
   do iarb=1,narb
-     nhalf(iarb)=int(0.5*(npara(iarb)+1))
+     if(sym(iarb)) then
+        nhalf(iarb)=int(0.5*(npara(iarb)+1))
+     else
+        nhalf(iarb)=1
+     endif
   enddo
 
 

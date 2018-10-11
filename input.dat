@@ -16,10 +16,10 @@ Nspecies	= 2
 theta		= 0.0
 delta		= 0.00001
 Bstart		= 1.0d-6
-dt		= 0.2
+dt		= 0.001
 tmax		= 200.0
 sgn		=-1
-restart		= 0
+restart		= 9920
 /
 
 &accuracy
@@ -33,6 +33,7 @@ q_in		= 1.0
 mu_in		= 1.0
 dens_in		= 1.0
 drift_in	= 0.0
+sym_in		= 1
 beta_para_in	= 1.0
 beta_perp_in	= 1.0
 /
@@ -43,6 +44,7 @@ q_in		=-1.0
 mu_in		= 1836.0
 dens_in		= 1.0
 drift_in	= 0.0
+sym_in		= 0
 beta_para_in	= 1.0
 beta_perp_in	= 1.0
 /
